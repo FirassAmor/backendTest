@@ -9,8 +9,8 @@ func GetPersonInfo(personID string) (*models.Person, error) {
     return repositories.GetPersonByID(personID)
 }
 
-func GetAllPersonInfo(limit, offset int) ([]*models.Person, error) {
-    return repositories.GetAllPersons(limit, offset)
+func GetAllPersons(offset, limit int) ([]*models.Person, int, error) {
+    return repositories.GetAllPersons(offset, limit)
 }
 
 func CreatePerson(person *models.Person) error {

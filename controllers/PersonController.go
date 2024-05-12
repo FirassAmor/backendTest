@@ -36,19 +36,14 @@ func CreatePerson(c *gin.Context) {
 }
 
 func GetAllPersonsInfo(c *gin.Context) {
-    // Retrieve pagination parameters
-    limit := c.DefaultQuery("limit", "10") // Default limit of 10 if not provided
-    offset := c.DefaultQuery("offset", "0")
+    offset, _ := strconv.Atoi(c.Query("offset"))
+    limit, _ := strconv.Atoi(c.Query("limit"))
 
-    // Convert limit and offset to integer
-    limitInt, _ := strconv.Atoi(limit)
-    offsetInt, _ := strconv.Atoi(offset)
-
-    // Call the service function with pagination parameters
-    info, err := services.GetAllPersonInfo(limitInt, offsetInt)
+    persons, totalCount, err := services.GetAllPersons(offset, limit)
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
-    c.JSON(http.StatusOK, info)
+
+    c.JSON(http.StatusOK, gin.H{"persons": persons, "total": totalCount})
 }
