@@ -30,3 +30,27 @@ func CreatePerson(person *models.Person) error {
     }
     return nil
 }
+
+func GetAllPersons(limit, offset int) ([]*models.Person, error) {
+    var persons []*models.Person
+
+    query := "SELECT id, name, age FROM person LIMIT ? OFFSET ?"
+    rows, err := database.DB.Query(query, limit, offset)
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
+
+    for rows.Next() {
+        var person models.Person
+        if err := rows.Scan(&person.ID, &person.Name, &person.Age); err != nil {
+            return nil, err
+        }
+        persons = append(persons, &person)
+    }
+    if err := rows.Err(); err != nil {
+        return nil, err
+    }
+
+    return persons, nil
+}
